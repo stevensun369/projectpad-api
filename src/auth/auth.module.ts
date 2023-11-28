@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Account, AccountSchema } from 'src/schemas/account.schema';
+import {  AuthController } from './auth.controller';
 
 import { CacheModule } from '@nestjs/cache-manager';
 import * as redisStore from 'cache-manager-redis-store';
-import { JwtModule, JwtService } from '@nestjs/jwt';
-import { JwtSecret } from 'src/env';
-import { AccountService } from './account.service';
+import { AuthService } from './auth.service';
+import { AccountService } from 'src/account/account.service';
 
 @Module({
   imports: [
@@ -20,6 +20,7 @@ import { AccountService } from './account.service';
       [{name: Account.name, schema: AccountSchema}]
     ),
   ],
-  providers: [AccountService],
+  controllers: [AuthController],
+  providers: [AuthService, AccountService],
 })
-export class AccountModule {}
+export class AuthModule {}
