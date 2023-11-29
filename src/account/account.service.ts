@@ -26,33 +26,33 @@ export class AccountService {
     await createdAccount.save();
   }
 
-  async getOne(query: {}): Promise<{}> {
+  async getOne(query: {}): Promise<Account> {
+    let account = {};
     try {
-      const accounts = await this.accountModel.find(query);
-
-      if (accounts.length < 1) throw new HttpException(
-        {'message': 'nu exista'},
-        500
-      )
-
-      const account = accounts[0];
-      return {
-        ID: account.ID,
-        email: account.email,
-        phone: account.phone,
-        firstName: account.firstName,
-        lastName: account.lastName,
-        links: account.links,
-        slug: account.slug,
-        bio: account.bio, 
-        password: account.password,
-      }
+      account = await this.accountModel.findOne(query);
     } catch (err) {
       throw new HttpException(
         {'message': 'eroare de sistem'},
         500
       );
     }
-  }
 
+    if (account == null)
+        throw new HttpException(
+          {'message': "Nu exista cont cu acest email"},
+          500
+        );
+
+    return {
+      ID: account['ID'],
+      email: account['email'],
+      phone: account['phone'],
+      firstName: account['firstName'],
+      lastName: account['lastName'],
+      links: account['links'],
+      slug: account['slug'],
+      bio: account['bio,'],
+      password: account['password'],
+    };
+  }
 }

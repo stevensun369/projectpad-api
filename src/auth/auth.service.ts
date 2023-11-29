@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { Account } from 'src/schemas/account.schema';
 
 
 @Injectable()
@@ -8,7 +9,11 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async genToken(payload: {}): Promise<string> {
+  async genTempToken(payload: {}): Promise<string> {
+    return await this.jwtService.signAsync(payload);
+  }
+
+  async genToken(payload: Account): Promise<string> {
     return await this.jwtService.signAsync(payload);
   }
 

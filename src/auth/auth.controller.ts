@@ -77,7 +77,7 @@ export class AuthController {
     const payload = {email: body.email};
 
     return {
-      token: await this.authService.genToken(payload),
+      token: await this.authService.genTempToken(payload),
     }
   }
 
@@ -156,7 +156,7 @@ export class AuthController {
     const payload = {email: body.email};
 
     return {
-      token: await this.authService.genToken(payload),
+      token: await this.authService.genTempToken(payload),
     }
   }
 
@@ -179,6 +179,7 @@ export class AuthController {
       }, 500);
     }
 
+    console.log(account)
     const token = await this.authService.genToken(account);
 
     return {
