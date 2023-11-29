@@ -1,5 +1,6 @@
 export default class AccountDTO {
   ID: string;
+  ProfilePic: string;
   email: string;
   phone: string;
   firstName: string;

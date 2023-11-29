@@ -4,9 +4,10 @@ import { Account, AccountSchema } from 'src/schemas/account.schema';
 
 import { CacheModule } from '@nestjs/cache-manager';
 import * as redisStore from 'cache-manager-redis-store';
-import { JwtModule, JwtService } from '@nestjs/jwt';
-import { JwtSecret } from 'src/env';
 import { AccountService } from './account.service';
+import { AccountController } from './account.controller';
+import { AuthService } from 'src/auth/auth.service';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
@@ -19,7 +20,11 @@ import { AccountService } from './account.service';
     MongooseModule.forFeature(
       [{name: Account.name, schema: AccountSchema}]
     ),
+    MulterModule.register({
+      dest: './files/profile'
+    })
   ],
-  providers: [AccountService],
+  providers: [AccountService, AuthService],
+  controllers: [AccountController],
 })
 export class AccountModule {}

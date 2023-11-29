@@ -17,7 +17,7 @@ export class AuthService {
     return await this.jwtService.signAsync(payload);
   }
 
-  async parseToken(token: string): Promise<{}> {
-    return await this.jwtService.decode(token.split(' ')[1]);
+  async parseToken(token: string): Promise<Account> {
+    return new Account(await this.jwtService.decode(token.split(' ')[1]));
   }
 }

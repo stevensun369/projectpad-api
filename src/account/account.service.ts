@@ -12,10 +12,8 @@ export class AccountService {
     @InjectModel(Account.name) private accountModel: Model<Account>,
   ) {}
 
-  async check(email: string): Promise<boolean> {
-    const account = await this.accountModel.exists({
-      email: email,
-    });
+  async check(query: {}): Promise<boolean> {
+    const account = await this.accountModel.exists(query);
 
     return account !== null;
   }
@@ -43,16 +41,31 @@ export class AccountService {
           500
         );
 
-    return {
-      ID: account['ID'],
-      email: account['email'],
-      phone: account['phone'],
-      firstName: account['firstName'],
-      lastName: account['lastName'],
-      links: account['links'],
-      slug: account['slug'],
-      bio: account['bio,'],
-      password: account['password'],
+    return new Account(account);
+  }
+
+  async changeField(query: {}, field: string, value: any): Promise<Account> {
+    let account = {};
+
+    let modify = {
+      $set: {},
     };
+    modify.$set[field] = value;
+
+    try {
+      account = await this.accountModel.findOneAndUpdate(
+        query,
+        modify,
+      );
+    } catch (err) {
+      throw new HttpException(
+        {'message': 'eroare de sistem'},
+        500
+      );
+    }
+
+    account[field] = value;
+
+    return new Account(account);
   }
 }

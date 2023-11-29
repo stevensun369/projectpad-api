@@ -5,6 +5,24 @@ export type AccountDocument = HydratedDocument<Account>;
 
 @Schema()
 export class Account {
+  constructor(from: {}) {
+    return {
+      ID: from['ID'],
+      ProfilePic: from['profilePic'],
+      email: from['email'],
+      phone: from['phone'],
+      firstName: from['firstName'],
+      lastName: from['lastName'],
+      links: from['links'],
+      slug: from['slug'],
+      bio: from['bio'],
+      password: from['password'],
+    }
+  }
+
+  @Prop()
+  ProfilePic: string;
+  
   @Prop()
   ID: string;
 
@@ -23,8 +41,8 @@ export class Account {
   @Prop()
   password: string;
 
-  @Prop()
-  links: [{platform: string, url: string}];
+  @Prop({type: {}})
+  links: {};
 
   @Prop()
   slug: string;

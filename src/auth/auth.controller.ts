@@ -28,7 +28,9 @@ export class AuthController {
   @Post('/signup/email')
   @HttpCode(200)
   async signupEmail(@Body() body: {email: string}): Promise<{}> {
-    const check = await this.accountService.check(body.email);
+    const check = await this.accountService.check(
+      {email: body.email}
+    );
 
     if (check) {
       throw new HttpException({
@@ -107,8 +109,10 @@ export class AuthController {
   @Post('/login/email')
   @HttpCode(200)
   async loginEmail(@Body() body: {email: string}): Promise<{}> {
-    const check = await this.accountService.check(body.email);
-
+    const check = await this.accountService.check(
+      {email: body.email}
+    );
+    
     if (!check) {
       throw new HttpException({
         message: 'Un utilizator cu acest email nu exista',
