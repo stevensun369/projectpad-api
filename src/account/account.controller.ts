@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Headers, HttpCode, HttpException, Param, Post, Put, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Headers, HttpCode, HttpException, Param, Patch, Post, Put, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { Account } from 'src/schemas/account.schema';
 import { AccountService } from './account.service';
@@ -12,8 +12,33 @@ export class AccountController {
   constructor(
     private accountService: AccountService, 
     private authService: AuthService, 
-
   ) {}
+
+  @Put('')
+  @HttpCode(200)
+  @UseGuards(AuthGuard)
+  async changeAccount(
+    @Headers('authorization') authToken: string, 
+    @Body() body: {
+        firstName: string, lastName: string, 
+        phone: string, bio: string
+      },
+  ): Promise<Account> {
+    const localAccount =
+      await this.authService.parseToken(authToken);
+
+    const account = await this.accountService.change(
+      {email: localAccount['email']},
+      {
+        firstName: body.firstName,
+        lastName: body.lastName,
+        phone: body.phone,
+        bio: body.bio,
+      }
+    )
+
+    return new Account(account);
+  }
 
   @Put('/links')
   @HttpCode(200)
@@ -59,7 +84,7 @@ export class AccountController {
     return await this.authService.parseToken(authToken);
   }
 
-  @Put('/image')
+  @Patch('/image')
   @UseInterceptors(FileInterceptor('file', {
     storage: diskStorage({
       async filename(req, file, callback) {
@@ -80,10 +105,10 @@ export class AccountController {
     return 'ok';
   }
   
-  @Put('/:field')
+  @Patch('/:field')
   @HttpCode(200)
   @UseGuards(AuthGuard)
-  async changeName(
+  async changeField(
     @Headers('authorization') authToken: string, 
     @Body() body: {
         firstName: string, lastName: string, 

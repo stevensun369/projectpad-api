@@ -8,7 +8,6 @@ export class Account {
   constructor(from: {}) {
     return {
       ID: from['ID'],
-      ProfilePic: from['profilePic'],
       email: from['email'],
       phone: from['phone'],
       firstName: from['firstName'],
@@ -19,9 +18,6 @@ export class Account {
       password: from['password'],
     }
   }
-
-  @Prop()
-  ProfilePic: string;
   
   @Prop()
   ID: string;

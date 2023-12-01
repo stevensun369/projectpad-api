@@ -68,4 +68,30 @@ export class AccountService {
 
     return new Account(account);
   }
+
+  async change(query: {}, update: {}): Promise<Account> {
+    let account = {};
+
+    let modify = {
+      $set: update,
+    };
+
+    try {
+      account = await this.accountModel.findOneAndUpdate(
+        query,
+        modify,
+      );
+    } catch (err) {
+      throw new HttpException(
+        {'message': 'eroare de sistem'},
+        500
+      );
+    }
+
+    Object.keys(update).map((key) => {
+      account[key] = update[key];
+    });
+
+    return new Account(account);
+  }
 }
