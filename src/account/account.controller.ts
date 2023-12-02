@@ -5,6 +5,7 @@ import { AccountService } from './account.service';
 import { AuthService } from 'src/auth/auth.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('account')
 export class AccountController {
@@ -12,6 +13,7 @@ export class AccountController {
   constructor(
     private accountService: AccountService, 
     private authService: AuthService, 
+    private jwtService: JwtService,
   ) {}
 
   @Put('')
@@ -23,7 +25,7 @@ export class AccountController {
         firstName: string, lastName: string, 
         phone: string, bio: string
       },
-  ): Promise<Account> {
+  ): Promise<{}> {
     const localAccount =
       await this.authService.parseToken(authToken);
 
@@ -37,7 +39,12 @@ export class AccountController {
       }
     )
 
-    return new Account(account);
+    const newAccount = new Account(account);
+
+    return {
+      account: newAccount,
+      token: this.jwtService.sign(newAccount),
+    }
   }
 
   @Put('/links')
@@ -115,7 +122,7 @@ export class AccountController {
         phone: string, slug: string, bio: string
       },
     @Param() params: {field: string},
-  ): Promise<Account> {
+  ): Promise<{}> {
     const localAccount =
       await this.authService.parseToken(authToken);
 
@@ -137,7 +144,12 @@ export class AccountController {
       params.field, body[params.field]
     )
 
-    return new Account(account);
+    const newAccount = new Account(account);
+
+    return {
+      account: newAccount,
+      token: this.jwtService.sign(newAccount),
+    };
   }
 
   @Get('/slug/:slug')
@@ -152,7 +164,7 @@ export class AccountController {
     
     if (check) {
       throw new HttpException(
-        {'message': "Un utilizator cu acest link exista deja"},
+        {'message': "Already being used :("},
         500
       )
     }

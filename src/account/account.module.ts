@@ -22,7 +22,7 @@ import { MulterModule } from '@nestjs/platform-express';
     ),
     MulterModule.register({
       dest: './files/profile'
-    })
+    }),
   ],
   providers: [AccountService, AuthService],
   controllers: [AccountController],
