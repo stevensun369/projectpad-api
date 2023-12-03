@@ -2,7 +2,6 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Account } from 'src/schemas/account.schema';
-import AccountDTO from '../schemas/account.dto';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -18,8 +17,8 @@ export class AccountService {
     return account !== null;
   }
 
-  async create(accountDTO: AccountDTO) {
-    const createdAccount = new this.accountModel(accountDTO);
+  async create(account: Account) {
+    const createdAccount = new this.accountModel(account);
 
     await createdAccount.save();
   }

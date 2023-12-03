@@ -12,10 +12,10 @@ export class Account {
       phone: from['phone'],
       firstName: from['firstName'],
       lastName: from['lastName'],
-      links: from['links'],
-      slug: from['slug'],
-      bio: from['bio'],
       password: from['password'],
+      slug: from['slug'],
+      links: from['links'],
+      bio: from['bio'],
     }
   }
   
@@ -37,11 +37,11 @@ export class Account {
   @Prop()
   password: string;
 
-  @Prop({type: {}})
-  links: {};
-
   @Prop()
   slug: string;
+
+  @Prop({type: {}})
+  links: {};
 
   @Prop()
   bio: string;

@@ -1,6 +1,5 @@
 import { Body, Controller, Get, Headers, HttpCode, HttpException, Inject, Post, UseGuards } from '@nestjs/common';
 import { AccountService } from '../account/account.service';
-import AccountDTO from '../schemas/account.dto';
 import { genCode, genID } from 'src/helpers/gen';
 import { sendEmail } from 'src/helpers/email';
 import * as bcrypt from 'bcrypt';
@@ -9,6 +8,7 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { AuthService } from './auth.service';
+import { Account } from 'src/schemas/account.schema';
 
 @Controller('auth')
 export class AuthController {
@@ -86,23 +86,23 @@ export class AuthController {
   @Post('/signup/basic')
   @HttpCode(200)
   @UseGuards(AuthGuard)
-  async signupBasic(@Headers('authorization') authToken: string, @Body() accountDTO: AccountDTO): Promise<{}> {
-    const account =
+  async signupBasic(@Headers('authorization') authToken: string, @Body() account: Account): Promise<{}> {
+    const localAccount =
       await this.authService.parseToken(authToken);
 
-    accountDTO.ID = genID(10);
-    accountDTO.slug = accountDTO.ID
-    accountDTO.password = await bcrypt.hash(accountDTO.password, rounds);
-    accountDTO.email = account['email'];
+    account.ID = genID(10);
+    account.slug = account.ID
+    account.password = await bcrypt.hash(account.password, rounds);
+    account.email = localAccount['email'];
 
 
-    await this.accountService.create(accountDTO);
+    await this.accountService.create(account);
 
-    const token = await this.authService.genToken(accountDTO);
+    const token = await this.authService.genToken(account);
 
     return {
       token: token,
-      account: accountDTO,
+      account: account,
     }
   }
   
