@@ -8,6 +8,9 @@ import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { AccountModule } from './account/account.module';
 import { join } from 'path';
+import { EntryController } from './entry/entry.controller';
+import { EntryService } from './entry/entry.service';
+import { EntryModule } from './entry/entry.module';
 
 @Module({
   imports: [
@@ -20,7 +23,8 @@ import { join } from 'path';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'files'),
       serveRoot: '/files/',
-    })
+    }),
+    EntryModule
   ],
   controllers: [AppController],
   providers: [AppService],

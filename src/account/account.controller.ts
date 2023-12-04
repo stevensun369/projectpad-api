@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Headers, HttpCode, HttpException, Param, Patch, Post, Put, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Headers, HttpCode, HttpException, Param, Patch, Put, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { Account } from 'src/schemas/account.schema';
 import { AccountService } from './account.service';
@@ -39,11 +39,10 @@ export class AccountController {
       }
     )
 
-    const newAccount = new Account(account);
 
     return {
-      account: newAccount,
-      token: this.jwtService.sign(newAccount),
+      account: account,
+      token: this.jwtService.sign(account),
     }
   }
 
@@ -64,7 +63,7 @@ export class AccountController {
 
     account.links[body.platform] = body.handle
 
-    return new Account(account);
+    return account;
   }
 
   @Delete('/links')
@@ -84,7 +83,7 @@ export class AccountController {
 
     account.links[body.platform] = ''
 
-    return new Account(account);
+    return account;
   }
 
   async getToken(authToken: string): Promise<Account> {
@@ -144,11 +143,9 @@ export class AccountController {
       params.field, body[params.field]
     )
 
-    const newAccount = new Account(account);
-
     return {
-      account: newAccount,
-      token: this.jwtService.sign(newAccount),
+      account: account,
+      token: this.jwtService.sign(account),
     };
   }
 
